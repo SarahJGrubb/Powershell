@@ -1,42 +1,42 @@
 Connect-ExchangeOnline
 
 #365 Groups
-$defaultGroupsChatt = 'fitzmark2@fitzmark.com','Trenches','Chatt'
-$defaultGroupsAtl = 'fitzmark2@fitzmark.com','Trenches','Atlanta Office'
-$defaultGroupsGvl = 'fitzmark2@fitzmark.com','Trenches','Gainesville'
-$defaultGroupsKck = 'fitzmark2@fitzmark.com','Trenches','Kansas City'
-$defaultGroupsBuf = 'fitzmark2@fitzmark.com','Trenches','Buffalo'
-$defaultGroupsIndy = 'fitzmark2@fitzmark.com','Indy Office'
-$defaultGroupsDet = 'fitzmark2@fitzmark.com','Detroit'
-$defaultGroupsOma = 'fitzmark2@fitzmark.com','Omaha'
+$defaultGroupsLocation1 = 'email@org.com', 'email@org.com', 'email@org.com@org.com'
+$defaultGroupsLocation2 = 'email@org.com', 'email@org.com', 'email@org.com@org.com'
+$defaultGroupsLocation3 = 'email@org.com', 'email@org.com', 'email@org.com@org.com'
+$defaultGroupsLocation4 = 'email@org.com', 'email@org.com', 'email@org.com@org.com'
+$defaultGroupsLocation5 = 'email@org.com', 'email@org.com', 'email@org.com@org.com'
+$defaultGroupsLocation6 = 'email@org.com', 'email@org.com@org.com'
+$defaultGroupsLocation7 = 'email@org.com', 'email@org.com@org.com'
+$defaultGroupsLocation8 = 'email@org.com', 'email@org.com@org.com'
 
 #Distros
-$defaultDistrosChatt = 'Employees','fitzmark@fitzmark.com'
-$defaultDistrosAtl = 'Employees','fitzmark@fitzmark.com'
-$defaultDistrosGvl = 'Employees','fitzmark@fitzmark.com'
-$defaultDistrosKck = 'Employees','fitzmark@fitzmark.com'
-$defaultDistrosBuf = 'Employees','fitzmark@fitzmark.com'
-$defaultDistrosIndy = 'Employees','fitzmark@fitzmark.com','Indy'
-$defaultDistrosDet = 'Employees','fitzmark@fitzmark.com'
-$defaultDistrosOma = 'Employees','fitzmark@fitzmark.com'
+$defaultDistrosLocation1 = 'email@org.com', 'email@org.com'
+$defaultDistrosLocation2 = 'email@org.com', 'email@org.com'
+$defaultDistrosLocation3 = 'email@org.com', 'email@org.com'
+$defaultDistrosLocation4 = 'email@org.com', 'email@org.com'
+$defaultDistrosLocation5 = 'email@org.com', 'email@org.com'
+$defaultDistrosLocation6 = 'email@org.com', 'email@org.com', 'email@org.com'
+$defaultDistrosLocation7 = 'email@org.com', 'email@org.com'
+$defaultDistrosLocation8 = 'email@org.com', 'email@org.com'
 
 function getInput {
     $choice = Read-Host "Choose input method: [1] CSV File [2] Manual Entry"
 
     if ($choice -eq 2) {
         do {
-            $username = Read-Host "Please enter user email" #Can update this to verify that the email exist before proceeding.
+            $username = Read-Host "Please enter user email" #Can update this to verify that the email@org.com exist before proceeding.
             try {
-                $knownEmail = Get-Mailbox -Identity $username
+                $knownemail = Get-Mailbox -Identity $username
         
-                if (-not $knownEmail) {
-                    Write-Host "Email Address does not exist. Please check the spelling and try again."
+                if (-not $knownemail) {
+                    Write-Host "email@org.com Address does not exist. Please check the spelling and try again."
                 }
             }
             catch {
-                $knownEmail = $null
+                $knownemail = $null
             }
-        } while (-not $knownEmail)
+        } while (-not $knownemail)
         
         #Office Location
         $officeLocation = Read-Host "Which office?" 
@@ -46,31 +46,33 @@ function getInput {
     }
     elseif ($choice -eq 1) {
         do {
-         $filePath = Read-Host "Enter the path to the CSV file"
-         $fileName = "TestAddUsersToTeams.csv"
+            $filePath = Read-Host "Enter the path to the CSV file"
+            $fileName = "TestAddUsersToTeams.csv"
      
-         try {
-             if(-not (Test-Path $filePath)) {
-             Write-Host "File Path does not exist, please try again."
-             }
-         }
-         catch {
-             $filePath = $null
-         }
+            try {
+                if (-not (Test-Path $filePath)) {
+                    Write-Host "File Path does not exist, please try again."
+                }
+            }
+            catch {
+                $filePath = $null
+            }
         } while (-not (Test-Path $filePath))
-     }
+    }
      
-        try {
-         $usersToAdd = Import-Csv ($filePath + "\" + $fileName) 
+    try {
+        $usersToAdd = Import-Csv ($filePath + "\" + $fileName) 
          
         foreach ($user in $usersToAdd) {
-         $username = $user.email
-         $officeLocation = $user.location
-         processUser $username $officeLocation
+            $username = $user.email
+            $officeLocation = $user.location
+            processUser $username $officeLocation
         } 
-     } catch {
-             Write-Host "Error occurred $_"
-     }
+    }
+    catch {
+        Write-Host "Error occurred $_"
+    }
+    continueOn
      
 
 } 
@@ -83,67 +85,67 @@ function processUser {
 
     try {
         switch ($officeLocation) {
-            "Chattanooga" {
-                foreach ($distro in $defaultDistrosChatt) {
+            "Office1" {
+                foreach ($distro in $defaultDistrosLocation1) {
                     Add-DistributionGroupMember -Identity $distro -Member $username
                 }
-                foreach ($group in $defaultGroupsChatt) {
+                foreach ($group in $defaultGroupsLocation1) {
                     Add-UnifiedGroupLinks -Identity $group -LinkType Members -Links $username
                 }
             }
-            "Atlanta" {
-                foreach ($distro in $defaultDistrosAtl) {
+            "Office2" {
+                foreach ($distro in $defaultDistrosLocation2) {
                     Add-DistributionGroupMember -Identity $distro -Member $username
                 }
-                foreach ($group in $defaultGroupsAtl) {
+                foreach ($group in $defaultGroupsLocation2) {
                     Add-UnifiedGroupLinks -Identity $group -LinkType Members -Links $username
                 }
             }
-            "Gainesville" {
-                foreach ($distro in $defaultDistrosGvl) {
+            "Office3" {
+                foreach ($distro in $defaultDistrosLocation3) {
                     Add-DistributionGroupMember -Identity $distro -Member $username
                 }
-                foreach ($group in $defaultGroupsGvl) {
+                foreach ($group in $defaultGroupsLocation3) {
                     Add-UnifiedGroupLinks -Identity $group -LinkType Members -Links $username
                 }
             }
-            "Indianapolis" {
-                foreach ($distro in $defaultDistrosIndy) {
+            "Office4" {
+                foreach ($distro in $defaultDistrosLocation4) {
                     Add-DistributionGroupMember -Identity $distro -Member $username
                 }
-                foreach ($group in $defaultGroupsIndy) {
+                foreach ($group in $defaultGroupsLocation4) {
                     Add-UnifiedGroupLinks -Identity $group -LinkType Members -Links $username
                 }
             }
-            "Buffalo" {
-                foreach ($distro in $defaultDistrosBuf) {
+            "Office5" {
+                foreach ($distro in $defaultDistrosLocation5) {
                     Add-DistributionGroupMember -Identity $distro -Member $username
                 }
-                foreach ($group in $defaultGroupsBuf) {
+                foreach ($group in $defaultGroupsLocation5) {
                     Add-UnifiedGroupLinks -Identity $group -LinkType Members -Links $username
                 }
             }
-            "KansasCity" {
-                foreach ($distro in $defaultDistrosKck) {
+            "Office6" {
+                foreach ($distro in $defaultDistrosLocation6) {
                     Add-DistributionGroupMember -Identity $distro -Member $username
                 }
-                foreach ($group in $defaultGroupsKck) {
+                foreach ($group in $defaultGroupsLocation6) {
                     Add-UnifiedGroupLinks -Identity $group -LinkType Members -Links $username
                 }
             }
-            "Detroit" {
-                foreach ($distro in $defaultDistrosDet) {
+            "Office7" {
+                foreach ($distro in $defaultDistrosLocation7) {
                     Add-DistributionGroupMember -Identity $distro -Member $username
                 }
-                foreach ($group in $defaultGroupsDet) {
+                foreach ($group in $defaultGroupsLocation7) {
                     Add-UnifiedGroupLinks -Identity $group -LinkType Members -Links $username
                 }
             }
-            "Omaha" {
-                foreach ($distro in $defaultDistrosOma) {
+            "Office8" {
+                foreach ($distro in $defaultDistrosLocation8) {
                     Add-DistributionGroupMember -Identity $distro -Member $username
                 }
-                foreach ($group in $defaultGroupsOma) {
+                foreach ($group in $defaultGroupsLocation8) {
                     Add-UnifiedGroupLinks -Identity $group -LinkType Members -Links $username
                 }
             }
@@ -151,6 +153,17 @@ function processUser {
     }
     catch {
         Write-Host "Error occurred while processing user $_"
+    }
+}
+
+function continueOn {
+    $answer = Read-Host "Do you want to continue? [Y]es or [N]o"
+
+    if ($answer -eq "Y") {
+        getInput
+    }
+    else {
+        Write-Host "Exiting..."
     }
 }
 
