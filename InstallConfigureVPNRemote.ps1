@@ -17,7 +17,7 @@ try {
     $ErrorActionPreference = 'Stop'
     #$loggedonuser = Get-CimInstance -classname Win32_ComputerSystem | Select-Object UserName
     $loggedonuser = $Env:USERNAME
-    Copy-Item -Path "C:\Users\$loggedonuser\Documents\SoftwareAndConfigs\FM_VNET_NC.AzureVpnProfileTest2.xml" -Destination "C:\Users\$loggedonuser\AppData\Local\Packages\Microsoft.AzureVpn_8wekyb3d8bbwe\LocalState"
+    Copy-Item -Path "C:\Users\$loggedonuser\Documents\SoftwareAndConfigs\VNET_NC.AzureVpnProfileTest2.xml" -Destination "C:\Users\$loggedonuser\AppData\Local\Packages\Microsoft.AzureVpn_8wekyb3d8bbwe\LocalState"
     #move xml to %userprofile%\AppData\Local\Packages\Microsoft.AzureVpn_8wekyb3d8bbwe\LocalState
 }
 catch {
